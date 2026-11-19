@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mando en directo</title>
+<style>
+  :root {
+    --fondo: #1b1d1a; --panel: #242722; --linea: #3a3e37;
+    --texto: #dcdfd6; --tenue: #8d9387; --acento: #e8b33c;
+    --s1: 8px; --s2: 16px; --s3: 24px; --s5: 48px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: var(--s5) var(--s2); background: var(--fondo); color: var(--texto);
+         font: 16px/1.5 Bahnschrift, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 2rem; font-weight: 600; margin: 0 0 var(--s1); }
+  h2 { font-size: 1rem; font-weight: 600; color: var(--tenue); margin: var(--s5) 0 var(--s2); }
+  p { margin: 0; color: var(--tenue); max-width: 62ch; }
+  #estado { margin-top: var(--s2); color: var(--texto); }
+  #botones { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: var(--s1); }
+  .b { background: var(--panel); border: 1px solid var(--linea); padding: var(--s2) 0; text-align: center;
+       font: 600 1.5rem/1 Consolas, monospace; color: var(--tenue); }
+  .b.on { background: var(--acento); border-color: var(--acento); color: var(--fondo); }
+  table { width: 100%; border-collapse: collapse; font-family: Consolas, monospace; }
+  th, td { text-align: left; padding: 6px var(--s1); border-bottom: 1px solid var(--linea); }
+  th { color: var(--tenue); font: 400 .85rem Bahnschrift, sans-serif; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Mando en directo</h1>
+  <p>Pulsa un botón del mando para que el navegador lo detecte. Los números empiezan en 1, igual que en el panel de Windows.</p>
+  <div id="estado">Esperando el mando…</div>
+
+  <h2>Botones</h2>
+  <div id="botones"></div>
+
+  <h2>Ejes (palos, gatillos, cruceta)</h2>
+  <div id="ejes" style="font-family: Consolas, monospace"></div>
+
+  <h2>Registro de pulsaciones</h2>
+  <table>
+    <thead><tr><th>Hora</th><th>Botón</th></tr></thead>
+    <tbody id="registro"></tbody>
+  </table>
+</main>
+<script>
+const estado = document.getElementById("estado");
+const cont = document.getElementById("botones");
+const registro = document.getElementById("registro");
+let previo = [];
+let centros = [];
+let ejeFuera = [];
+let t0 = performance.now();
+
+function bucle() {
+  const pads = Array.from(navigator.getGamepads()).filter(Boolean);
+  const pad = pads.find(p => /xbox|045e/i.test(p.id)) || pads[0];
+  if (pad) {
+    estado.textContent = `${pad.id} (${pad.buttons.length} botones)`;
+    if (cont.children.length !== pad.buttons.length) {
+      cont.replaceChildren(...pad.buttons.map((_, i) => {
+        const d = document.createElement("div");
+        d.className = "b";
+        d.textContent = i + 1;
+        return d;
+      }));
+    }
+    if (!centros.length) centros = [...pad.axes];
+    document.getElementById("ejes").textContent =
+      pad.axes.map((v, i) => `eje ${i + 1}: ${v.toFixed(2)}`).join("   ");
+    pad.axes.forEach((v, i) => {
+      const fuera = Math.abs(v - centros[i]) > 0.5;
+      if (fuera && !ejeFuera[i]) {
+        const f = document.createElement("tr");
+        f.innerHTML = `<td>${((performance.now() - t0) / 1000).toFixed(1)} s</td><td>eje ${i + 1} = ${v.toFixed(2)}</td>`;
+        registro.prepend(f);
+      }
+      ejeFuera[i] = fuera;
+    });
+    pad.buttons.forEach((b, i) => {
+      cont.children[i].classList.toggle("on", b.pressed);
+      if (b.pressed && !previo[i]) {
+        const f = document.createElement("tr");
+        f.innerHTML = `<td>${((performance.now() - t0) / 1000).toFixed(1)} s</td><td>${i + 1}</td>`;
+        registro.prepend(f);
+      }
+      previo[i] = b.pressed;
+    });
+  }
+  requestAnimationFrame(bucle);
+}
+bucle();
+</script>
+</body>
+</html>

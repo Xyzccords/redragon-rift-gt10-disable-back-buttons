@@ -1,0 +1,18 @@
+[package]
+name = "filtro_mando"
+version = "0.1.0"
+edition = "2024"
+description = "Anula los 4 botones traseros del mando Redragon Rift GT10 (USB 2563:0575) en Windows"
+license = "MIT"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
+[dependencies]
+ctrlc = "3.5.3"
+eframe = { version = "0.36.2", default-features = false, features = ["glow", "default_fonts"] }
+hidapi = { version = "2.6.7", default-features = false, features = ["windows-native"] }
+vigem-client = "0.1.4"
+winreg = "0.56.0"
