@@ -36,8 +36,8 @@ The installer is written to `dist\`.
 
 ## Known limits
 
-- Tested with one pad on Windows 11 Pro, ViGEmBus 1.22.0 and HidHide 1.5.230.
-- Installing ViGEmBus and HidHide on a PC that does not have them has not been tested.
+- Tested with one pad on two PCs running Windows 11, with ViGEmBus 1.22.0 and HidHide 1.5.230. On the second PC, which had neither driver, the installer installed both and the filter worked.
+- Not tested on Windows 10 or with other pads.
 - The installer is unsigned.
 - The UI and the docs are in Spanish. The report layout of the pad is described in [docs/como-funciona.md](docs/como-funciona.md).
 

@@ -19,7 +19,7 @@ Los juegos ven un solo mando de Xbox 360 con los botones de adelante y sin los t
 
 ## Instalar
 
-Si el repositorio tiene un instalador en la sección Releases, es el mismo que se obtiene con los pasos de [Compilar](#compilar).
+Descarga `FiltroMando_Setup_0.1.0.exe` de la sección [Releases](../../releases). También puedes generarlo con los pasos de [Compilar](#compilar).
 
 1. Ejecuta `FiltroMando_Setup_0.1.0.exe`. Windows puede avisar "Windows protegió su PC" porque el instalador no está firmado. Elige "Más información" y "Ejecutar de todas formas".
 2. El instalador agrega ViGEmBus y HidHide si no los tienes. Pide permisos de administrador.
@@ -63,8 +63,8 @@ Para probar sin instalar, `target\release\filtro_mando.exe` funciona igual, siem
 
 ## Límites conocidos
 
-- Probado con un solo mando, en Windows 11 Pro, con ViGEmBus 1.22.0 y HidHide 1.5.230.
-- La instalación de ViGEmBus y HidHide en un PC que no los tiene no está probada. Las opciones silenciosas con las que el instalador llama a ViGEmBus no están verificadas. Las de HidHide sí.
+- Probado con un solo mando, en dos PCs con Windows 11, con ViGEmBus 1.22.0 y HidHide 1.5.230. En el segundo PC, que no tenía ninguno de los dos controladores, el instalador los instaló y el filtro funcionó.
+- No se probó en Windows 10 ni con otros mandos.
 - El instalador no está firmado.
 - ViGEmBus está archivado por su autor y ya no recibe cambios. La versión 1.22.0 funcionó en la prueba.
 - Si pulsas un trasero y el botón de adelante que copia al mismo tiempo, ambos se descartan. Esto sale del código y no se probó.
